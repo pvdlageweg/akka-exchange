@@ -15,21 +15,18 @@
  */
 package com.boldradius.akka_exchange.util
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.ActorSystem
 import akka.cluster.Cluster
-
-import scala.collection.breakOut
-
+import com.typesafe.config.Config
 
 abstract class ExchangeNodeBootable extends App {
-  import net.ceedubs.ficus.Ficus._
 
   fetchSystemProperties(args)
 
 
-  implicit val system = ActorSystem("akka-exchange")
+  implicit val system:ActorSystem = ActorSystem("akka-exchange")
 
-  implicit val config = system.settings.config
+  implicit val config:Config = system.settings.config
 
 
   val cluster = Cluster(system)
@@ -53,7 +50,7 @@ abstract class ExchangeNodeBootable extends App {
     val options: Map[String, String] = if (args.length > 0)
       args.collect {
         case Property(key, value) => key -> value
-      }(breakOut)
+      }.view.map(t=>t._1->t._2).toMap
     else
       Map.empty[String, String]
 

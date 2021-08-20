@@ -2,22 +2,21 @@ import com.typesafe.sbt.packager.docker.ExecCmd
 
 name := "akka-exchange"
 
-val akkaVersion        = "2.4.1"
-val akkaStreamVersion  = "1.0"
-val akkaHttpVersion    = "1.0"
+val akkaVersion        = "2.6.16"
+val akkaHttpVersion    = "10.2.6"
 val sigarLoaderVersion = "1.6.6-rev002"
-val logbackVersion     = "1.1.3"
+val logbackVersion     = "1.2.5"
 val projectVersion     = "0.1-SNAPSHOT"
-val squantsVersion     = "0.5.3"
-val nScalaTimeVersion  = "2.2.0"
-val groovyVersion      = "2.4.5"
-val scalatestVersion   = "2.2.4"
-val ficusVersion       = "1.1.2"
+val squantsVersion     = "1.8.2"
+val nScalaTimeVersion  = "2.28.0"
+val groovyVersion      = "3.0.8"
+val scalatestVersion   = "3.2.9"
+val ficusVersion       = "1.5.0"
 
 lazy val commonSettings = Seq(
   organization := "com.boldradius",
   version := projectVersion,
-  scalaVersion := "2.11.7",
+  scalaVersion := "2.13.6",
   libraryDependencies ++= Seq(
     "com.typesafe.akka" %% "akka-actor" % akkaVersion,
     "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
@@ -26,12 +25,12 @@ lazy val commonSettings = Seq(
     "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
     "ch.qos.logback" % "logback-classic" % logbackVersion,
     "io.kamon" % "sigar-loader" % sigarLoaderVersion,
-    "com.squants" %% "squants" % squantsVersion,
+    "org.typelevel" %% "squants" % squantsVersion,
     // for the saner groovy config of Logback
     "com.github.nscala-time" %% "nscala-time" % nScalaTimeVersion,
     "org.codehaus.groovy" % "groovy" % groovyVersion,
     "org.scalatest" %% "scalatest" % scalatestVersion % "test",
-    "net.ceedubs" %% "ficus" % ficusVersion
+    "com.iheart" %% "ficus" % ficusVersion
   ),
   fork in (Test, run) := true,
   // Runs OpenJDK 8. Official docker image, should be safe to use.
@@ -58,6 +57,7 @@ lazy val root = (project in file(".")).
   settings(commonSettings: _*).
   settings(
   )
+lazy val rootRef = LocalProject("root")
 
 lazy val util = project.
   settings(commonSettings: _*).
@@ -72,7 +72,7 @@ lazy val util = project.
     ),
     fork in (Test, run) := true
   ).
-  dependsOn("root")
+  dependsOn(rootRef)
 
 lazy val journal = project.
   settings(commonSettings: _*).
@@ -102,8 +102,7 @@ lazy val frontend = project.
   settings(
     name := "akka-exchange-frontend",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" % "akka-http-core-experimental_2.11" % akkaHttpVersion,
-      "com.typesafe.akka" % "akka-http-experimental_2.11" % akkaHttpVersion
+      "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
     ),
     bashScriptExtraDefines ++=  IO.readLines(file(".") / "src" / "main" / "resources" / "docker-detect.sh"),
     // todo - change me once we figure out port(s)?
@@ -154,7 +153,7 @@ lazy val securitiesDB = (project in file("securities-db")).
   settings(
     name := "akka-exchange-securities-db",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-distributed-data-experimental" % akkaVersion
+      "com.typesafe.akka" %% "akka-distributed-data" % akkaVersion
     ),
     bashScriptExtraDefines ++=  IO.readLines(file(".") / "src" / "main" / "resources" / "docker-detect.sh")
   ).
@@ -187,7 +186,7 @@ lazy val networkTrade = (project in file("network-trade")).
   settings(
     name := "akka-exchange-network-trade",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" % "akka-stream-experimental_2.11" % akkaStreamVersion
+      "com.typesafe.akka" %% "akka-stream" % akkaVersion
     ),
     bashScriptExtraDefines ++=  IO.readLines(file(".") / "src" / "main" / "resources" / "docker-detect.sh")
   ).

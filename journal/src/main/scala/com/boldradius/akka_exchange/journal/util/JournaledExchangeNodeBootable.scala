@@ -15,11 +15,8 @@
  */
 package com.boldradius.akka_exchange.journal.util
 
-import akka.actor.{Props, ActorSystem}
-import akka.cluster.Cluster
-import com.boldradius.akka_exchange.journal.{SharedJournalFinder, SharedJournal}
+import com.boldradius.akka_exchange.journal.SharedJournalFinder
 import com.boldradius.akka_exchange.util.ExchangeNodeBootable
-import scala.collection.breakOut
 
 
 abstract class JournaledExchangeNodeBootable extends ExchangeNodeBootable {
@@ -29,9 +26,7 @@ abstract class JournaledExchangeNodeBootable extends ExchangeNodeBootable {
   val persistentJournal = {
     println("Booting up Journal Finder...")
     system.actorOf(
-      Props(
-        classOf[SharedJournalFinder]
-      ),
+      SharedJournalFinder.props,
       SharedJournalFinder.name
     )
   }

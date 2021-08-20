@@ -19,10 +19,11 @@ package com.boldradius.akka_exchange.journal
 import akka.actor._
 import akka.cluster.ClusterEvent._
 import akka.cluster._
-import akka.persistence.journal.leveldb.{ SharedLeveldbJournal, SharedLeveldbStore }
+import akka.persistence.journal.leveldb.{SharedLeveldbJournal, SharedLeveldbStore}
 import com.boldradius.akka_exchange.util.ExchangeNodeBootable
 
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 object SharedJournal {
 

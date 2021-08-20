@@ -15,9 +15,11 @@
  */
 package com.boldradius.akka_exchange.domain
 
-import org.scalatest._
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-class CUSIPSpec extends WordSpec with ShouldMatchers {
+
+class CUSIPSpec extends AnyWordSpec with Matchers {
   val Netflix2025CorporateBond = "U74079AE1"
 
   // we really don't need cusip validation. wire this in later for fun.
